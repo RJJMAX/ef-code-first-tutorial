@@ -1,23 +1,44 @@
 ﻿
-using ef_code_first_tutorial;
-using Microsoft.EntityFrameworkCore;
+using ef_code_first_tutorial.Controllers;
 
-var _context = new SalesDBContext();
+var custCtrl = new CustomersController();
 
-var customer = _context.Customers
-                                .Include(x => x.Orders)
-                                .ThenInclude(x => x.OrderLines)
-                                .ThenInclude(x => x.Item)
-                                .Single(x => x.Id == 1);
+var customer = await custCtrl.GetCustomerWithOrders(1);
 
-Console.WriteLine($"Customer: {customer.Name}");
-foreach(var ord in customer.Orders) {
+//foreach(var cust in customer) {
+//    Console.WriteLine(cust.Name);
+//}
+
+Console.WriteLine($"Customer: {customer!.Name}");
+foreach (var ord in customer.Orders) {
     Console.WriteLine($" - Order Description:  {ord.Description}");
-    foreach(var ol in ord.OrderLines) {
+    foreach (var ol in ord.OrderLines) {
         Console.WriteLine($" -- ORDERLINE Product: {ol.Item.Name}, Quantity:   {ol.Quantity}, " +
     $"Price:   {ol.Item.Price:C}, Line Total:  {ol.Quantity * ol.Item.Price:C}");
     }
 }
+
+
+
+//using ef_code_first_tutorial;
+//using Microsoft.EntityFrameworkCore;
+
+//var _context = new SalesDBContext();
+
+//var customer = _context.Customers
+//                                .Include(x => x.Orders)
+//                                .ThenInclude(x => x.OrderLines)
+//                                .ThenInclude(x => x.Item)
+//                                .Single(x => x.Id == 1);
+
+//Console.WriteLine($"Customer: {customer.Name}");
+//foreach(var ord in customer.Orders) {
+//    Console.WriteLine($" - Order Description:  {ord.Description}");
+//    foreach(var ol in ord.OrderLines) {
+//        Console.WriteLine($" -- ORDERLINE Product: {ol.Item.Name}, Quantity:   {ol.Quantity}, " +
+//    $"Price:   {ol.Item.Price:C}, Line Total:  {ol.Quantity * ol.Item.Price:C}");
+//    }
+//}
 
 //var order = _context.Orders.Include(x => x.OrderLines).Where(x => x.Id == 2).ToList();
 //var order = _context.Orders
